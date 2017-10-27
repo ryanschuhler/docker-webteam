@@ -1,0 +1,29 @@
+version: '2'
+services:
+  liferay:
+    build: liferay/.
+    container_name: liferay
+    ports:
+     - "8080:8080"
+     - "11311:11311"
+    environment:
+      - VIRTUAL_PORT=8080
+    depends_on:
+     - mariadb
+  apache:
+    build: apache/.
+    container_name: apache
+    ports:
+      - '80:80'
+      - '443:443'
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_DATABASE=lportal
+      - character-set-server=utf8mb4
+      - collation-server=utf8mb4_unicode_ci
+  elasticsearch:
+    image: elasticsearch
+    container_name: elasticsearch
