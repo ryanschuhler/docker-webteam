@@ -1,7 +1,12 @@
 version: '2'
 services:
   liferay:
-    build: liferay/.
+    image: liferay
+    build:
+      context: liferay/.
+      args:
+        CURL_USERNAME:
+        CURL_PASSWORD:
     container_name: liferay
     ports:
      - "8080:8080"
@@ -11,11 +16,19 @@ services:
     depends_on:
      - mariadb
   apache:
+    image: apache
     build: apache/.
     container_name: apache
     ports:
-      - '80:80'
-      - '443:443'
+      - "80:80"
+      - "443:443"
+  elasticsearch:
+    image: elasticsearch
+    build: elasticsearch/.
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
   mariadb:
     image: mariadb
     container_name: mariadb
@@ -24,6 +37,3 @@ services:
       - MYSQL_DATABASE=lportal
       - character-set-server=utf8mb4
       - collation-server=utf8mb4_unicode_ci
-  elasticsearch:
-    image: elasticsearch
-    container_name: elasticsearch

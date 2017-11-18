@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -o errexit
 
@@ -34,10 +34,11 @@ prepare_liferay_deploy_directory() {
   "
   tree $LIFERAY_DEPLOY_DIR
 
-  [ -f $LIFERAY_DEPLOY_DIR/*.lpkg ] && cp $LIFERAY_DEPLOY_DIR/*.lpkg $LIFERAY_HOME/osgi/marketplace
-  [ -f $LIFERAY_DEPLOY_DIR/*.jar ] && cp $LIFERAY_DEPLOY_DIR/*.jar $LIFERAY_HOME/osgi/modules
-  [ -f $LIFERAY_DEPLOY_DIR/*.war ] && cp $LIFERAY_DEPLOY_DIR/*.war $LIFERAY_HOME/osgi/war
-  [ -f $LIFERAY_DEPLOY_DIR/*.xml ] && cp $LIFERAY_DEPLOY_DIR/*.xml $LIFERAY_HOME/deploy
+  mkdir -p $LIFERAY_HOME/deploy
+  [ -f $LIFERAY_DEPLOY_DIR/*.lpkg ] && cp $LIFERAY_DEPLOY_DIR/*.lpkg $LIFERAY_HOME/deploy
+  [ -f $LIFERAY_DEPLOY_DIR/*.jar ] && cp $LIFERAY_DEPLOY_DIR/*.jar $LIFERAY_HOME/deploy
+  [ -f $LIFERAY_DEPLOY_DIR/*.war ] && cp $LIFERAY_DEPLOY_DIR/*.war $LIFERAY_HOME/deploy
+  [ -f $LIFERAY_DEPLOY_DIR/*.xml ] &&  cp $LIFERAY_DEPLOY_DIR/*.xml $LIFERAY_HOME/deploy
 
   echo "
   Continuing.
@@ -128,8 +129,6 @@ run_portal() {
 
     chown -R liferay:liferay $LIFERAY_SHARED
     chown -R liferay:liferay $LIFERAY_HOME
-
-    set -- gosu liferay "$@"
   fi
 
   # As argument is not related to liferay,
