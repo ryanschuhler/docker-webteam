@@ -1,5 +1,11 @@
 version: '3.3'
 
+networks:
+  www-external:
+    internal: false
+  www-internal:
+    internal: true
+
 services:
   apache:
     build: apache/.
@@ -28,13 +34,14 @@ services:
   liferay:
     build:
       args:
+        LIFERAY_HOME: /usr/local/liferay-dxp-digital-enterprise-7.0-sp6
         LIFERAY_TOMCAT_URL: http://mirrors/files.liferay.com/private/ee/portal/7.0.10.6/liferay-dxp-digital-enterprise-tomcat-7.0-sp6-20171010144253003.zip
+        MODULES_URL: https://github.com/ryanschuhler/www-workspace/archive/master.zip
       context: liferay/.
     container_name: liferay
     depends_on:
      - "mariadb"
     environment:
-      - "LIFERAY_HOME=/usr/local/liferay-dxp-digital-enterprise-7.0-sp6"
       - "VIRTUAL_PORT=8080"
     image: liferay
     networks:
@@ -77,9 +84,3 @@ volumes:
   liferay:
   mariadb:
   mockmock:
-
-networks:
-  www-external:
-    internal: false
-  www-internal:
-    internal: true
