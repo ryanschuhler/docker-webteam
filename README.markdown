@@ -4,13 +4,14 @@ This repo is for webteam's server infrastructure on docker.
 # Steps
 * Intall Docker (https://docs.docker.com/engine/installation/)
 	* Increase memory in docker (in app preferences)
-* Navigate to /docker-webteam folder
+* Navigate to /www-docker folder
 * Run `docker-compose up -d`
 * Go to http://localhost in your browser
 * Notes
 	* You need to be on the office network or vpnd into the office in order to download some of the files form mirrors.liferay
 	* If you want to build only liferay you can navigate to the liferay folder and run `docker build -t liferay . && docker run -d -p 8080:8080 --name liferay liferay`
 	* If you are seeing issues with apache and conflicting ports on mac you can run `sudo apachectl stop`
+	* If you are seeing errors with scripts on Windows it might be an issue with line endings and bash. You can use dos2unix to correct or set the config for line endings in git (ie `dos2unix liferay/entrypoint.sh` or `git config --global autocrlf input`)
 	* You can run `docker ps -a` to see the containers and their statuses
 	* For logs run `docker logs -f [CONTAINER_ID|CONTAINER_NAME]` ie `docker logs -f liferay`
 	* To navigate the terminal of a container run  `docker exec -it [CONTAINER_ID|CONTAINER_NAME] /bin/sh` ie `docker exec -it mariadb /bin/sh`
@@ -37,4 +38,5 @@ If you look at the docker-compose.yaml you can see all of the containers and set
 * Liferay Instance
 	* This is your running instance of liferay
 	* Notice you can add files to the `/www-docker/liferay/configs` or `/www-docker/liferay/deploy` folders and when you start up your server it will deploy these files for you using the entrypoint.sh script
-	* If you set the `MODULES_URL` in docker-compose.yaml it will download and deploy your modules from a github repo (not working yet)
+	* If you want to download your own bundle instead of using the url to download, you can do so by adding a `bundle.zip` to the `/liferay/bundle` folder
+	* If you set the `WORKSPACE_URL` and `WORKSPACE_DIR` in docker-compose.yaml it will download and deploy your modules from a github repo

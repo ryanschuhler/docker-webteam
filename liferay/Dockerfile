@@ -8,14 +8,14 @@ RUN apk update \
   && addgroup -S liferay \
   && adduser -S -g liferay liferay
 
-ARG LIFERAY_HOME
+ARG LIFERAY_HOME_NAME
 ARG LIFERAY_TOMCAT_URL
 ARG WORKSPACE_DIR
 ARG WORKSPACE_URL
 
 ENV LIFERAY_CONFIG_DIR=/tmp/liferay/configs
 ENV LIFERAY_DEPLOY_DIR=/tmp/liferay/deploy
-ENV LIFERAY_HOME=$LIFERAY_HOME
+ENV LIFERAY_HOME=/usr/local/$LIFERAY_HOME_NAME
 ENV LIFERAY_SHARED=/storage/liferay
 ENV LIFERAY_WEB_SERVER_PROTOCOL=https
 ENV WORKSPACE_DIR=$WORKSPACE_DIR
@@ -26,21 +26,33 @@ ENV PATH=$PATH:$CATALINA_HOME/bin
 
 WORKDIR /usr/local
 
-RUN mkdir -p "$LIFERAY_HOME" \
-  && set -x \
-  && curl -fSL "$LIFERAY_TOMCAT_URL" -o bundle.zip \
-  && unzip bundle.zip \
-  && rm bundle.zip \
-  && chown -R liferay:liferay $LIFERAY_HOME
+COPY ./bundle/*.zip /usr/local/bundle.zip
 
-RUN if [ "$WORKSPACE_URL" != "" ]; then \
+RUN if [ ! -f "/usr/local/bundle.zip" ] && [ "$LIFERAY_TOMCAT_URL" != "" ] \
+  ; then \
+    mkdir -p "$LIFERAY_HOME" \
+    && set -x \
+    && curl -fSL "$LIFERAY_TOMCAT_URL" -o bundle.zip \
+  ; else echo "No bundle included or linked." \
+  ; fi
+
+RUN if [[ ! -f "$LIFERAY_HOME/*.zip" ]] \
+  ; then \
+    set -x \
+    && unzip bundle.zip \
+    && rm bundle.zip \
+    && chown -R liferay:liferay $LIFERAY_HOME \
+  ; fi
+
+RUN if [ "$WORKSPACE_URL" != "" ] \
+  ; then \
     set -x \
     && curl -fSL "$WORKSPACE_URL" -o /tmp/workspace.zip \
     && unzip /tmp/workspace.zip -d /tmp \
     && rm /tmp/workspace.zip \
     && chown -R liferay:liferay /tmp/www-workspace-master \
-    && chmod +x /tmp/www-workspace-master/gradlew; \
-  fi
+    && chmod +x /tmp/www-workspace-master/gradlew \
+  ; fi
 
 COPY ./entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh

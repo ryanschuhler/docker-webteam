@@ -34,7 +34,7 @@ services:
   liferay:
     build:
       args:
-        LIFERAY_HOME: /usr/local/liferay-dxp-digital-enterprise-7.0-sp6
+        LIFERAY_HOME_NAME: liferay-dxp-digital-enterprise-7.0-sp6
         LIFERAY_TOMCAT_URL: http://mirrors/files.liferay.com/private/ee/portal/7.0.10.6/liferay-dxp-digital-enterprise-tomcat-7.0-sp6-20171010144253003.zip
         WORKSPACE_DIR: /tmp/www-workspace-master
         WORKSPACE_URL: https://github.com/ryanschuhler/www-workspace/archive/master.zip
