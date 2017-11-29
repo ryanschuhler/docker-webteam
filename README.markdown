@@ -38,5 +38,5 @@ If you look at the docker-compose.yaml you can see all of the containers and set
 * Liferay Instance
 	* This is your running instance of liferay
 	* Notice you can add files to the `/www-docker/liferay/configs` or `/www-docker/liferay/deploy` folders and when you start up your server it will deploy these files for you using the entrypoint.sh script
-	* If you want to download your own bundle instead of using the url to download, you can do so by adding a `bundle.zip` to the `/liferay/bundle` folder
+	* If you want to download your own bundle instead of using the url to download, you can do so by adding a `bundle.zip` to the `/www-docker/liferay` folder
 	* If you set the `WORKSPACE_URL` and `WORKSPACE_DIR` in docker-compose.yaml it will download and deploy your modules from a github repo

@@ -26,14 +26,13 @@ ENV PATH=$PATH:$CATALINA_HOME/bin
 
 WORKDIR /usr/local
 
-COPY ./bundle/*.zip /usr/local/bundle.zip
+COPY ./*.zip /usr/local/
 
 RUN if [ ! -f "/usr/local/bundle.zip" ] && [ "$LIFERAY_TOMCAT_URL" != "" ] \
   ; then \
     mkdir -p "$LIFERAY_HOME" \
     && set -x \
     && curl -fSL "$LIFERAY_TOMCAT_URL" -o bundle.zip \
-  ; else echo "No bundle included or linked." \
   ; fi
 
 RUN if [[ ! -f "$LIFERAY_HOME/*.zip" ]] \
