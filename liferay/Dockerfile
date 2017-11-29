@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.5
 
 MAINTAINER Ryan Schuhler <ryan.schuhler@liferay.com>
 
@@ -10,13 +10,16 @@ RUN apk update \
 
 ARG LIFERAY_HOME
 ARG LIFERAY_TOMCAT_URL
-ARG MODULES_URL
+ARG WORKSPACE_DIR
+ARG WORKSPACE_URL
 
 ENV LIFERAY_CONFIG_DIR=/tmp/liferay/configs
 ENV LIFERAY_DEPLOY_DIR=/tmp/liferay/deploy
 ENV LIFERAY_HOME=$LIFERAY_HOME
 ENV LIFERAY_SHARED=/storage/liferay
 ENV LIFERAY_WEB_SERVER_PROTOCOL=https
+ENV WORKSPACE_DIR=$WORKSPACE_DIR
+
 ENV CATALINA_HOME=$LIFERAY_HOME/tomcat-8.0.32
 
 ENV PATH=$PATH:$CATALINA_HOME/bin
@@ -30,15 +33,13 @@ RUN mkdir -p "$LIFERAY_HOME" \
   && rm bundle.zip \
   && chown -R liferay:liferay $LIFERAY_HOME
 
-RUN if [ "$MODULES_URL" != "" ]; then \
+RUN if [ "$WORKSPACE_URL" != "" ]; then \
     set -x \
-    && curl -fSL "$MODULES_URL" -o /tmp/workspace.zip \
+    && curl -fSL "$WORKSPACE_URL" -o /tmp/workspace.zip \
     && unzip /tmp/workspace.zip -d /tmp \
     && rm /tmp/workspace.zip \
     && chown -R liferay:liferay /tmp/www-workspace-master \
-    && chmod +x /tmp/www-workspace-master/gradlew \
-    && /tmp/www-workspace-master/gradlew build; \
-    #&& /tmp/www-workspace-master/gradlew deploy; \
+    && chmod +x /tmp/www-workspace-master/gradlew; \
   fi
 
 COPY ./entrypoint.sh /usr/local/bin

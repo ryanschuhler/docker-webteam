@@ -36,7 +36,8 @@ services:
       args:
         LIFERAY_HOME: /usr/local/liferay-dxp-digital-enterprise-7.0-sp6
         LIFERAY_TOMCAT_URL: http://mirrors/files.liferay.com/private/ee/portal/7.0.10.6/liferay-dxp-digital-enterprise-tomcat-7.0-sp6-20171010144253003.zip
-        MODULES_URL: https://github.com/ryanschuhler/www-workspace/archive/master.zip
+        WORKSPACE_DIR: /tmp/www-workspace-master
+        WORKSPACE_URL: https://github.com/ryanschuhler/www-workspace/archive/master.zip
       context: liferay/.
     container_name: liferay
     depends_on:
@@ -45,13 +46,14 @@ services:
       - "VIRTUAL_PORT=8080"
     image: liferay
     networks:
+      - "www-external"
       - "www-internal"
     volumes:
       - "liferay:/opt/liferay/home/data"
   mariadb:
     build:
       args:
-        DB_URL: http://mirrors/files.liferay.com/private/lrdcom/www_lportal-2017-11-21_19-00-PST.sql.gz
+        DB_URL: http://mirrors/files.liferay.com/private/lrdcom/www_lportal-2017-11-27_19-00-PST.sql.gz
       context: mariadb/.
     container_name: mariadb
     environment:
