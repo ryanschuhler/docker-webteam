@@ -1,0 +1,6 @@
+{
+  "id": "liferay",
+  "volume": "/opt/java/liferay",
+  "memory": 4096,
+  "cpu": 3
+}
