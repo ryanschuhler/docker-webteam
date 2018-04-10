@@ -1,0 +1,4 @@
+liferay/build-resources/patches/*
+liferay/build-resources/bundle.zip
+liferay/resources/bin/startup/license.xml
+mariadb/resources/docker-entrypoint-initdb.d/*.sql*

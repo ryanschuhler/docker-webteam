@@ -1,11 +1,8 @@
-FROM mariadb:10.0
+FROM mariadb:latest
 
-MAINTAINER Ryan Schuhler <ryan.schuhler@liferay.com>
+COPY ./resources/ /
 
-RUN apt-get update \
-  && apt-get install -y curl gzip \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER mysql
 
-COPY resources/ /usr/local/bin/
-RUN chmod +x /usr/local/bin/update-database.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
