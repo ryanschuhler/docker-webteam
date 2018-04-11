@@ -4,8 +4,8 @@ This is a repo to help build docker images for liferay development. For help, qu
 ## Getting Started
 * Intall [Docker](https://docs.docker.com/engine/installation/)
 	* Increase memory in docker (in app preferences)
-* From the root folder run `./init.sh` 
-  * This will download all of the necesssary files from mirrors.liferay as defined in the `download-files.sh` of each container. (you may need to be vpnd into the server room)
+* If you are not on the liferay network, from the root folder run `./update-credentials.sh` 
+  * This will prompt you for your credentials for mirrors.liferay.com and save them locally on your computer.
 * Run `docker-compose build`
   * This will build all of the docker images with the files you previously downloaded.
 * Run `docker-compose up -d`
