@@ -41,10 +41,10 @@ services:
     build:
       args:
         BUILD_SCRIPTS: "bundle-exclude.sh,apply-fix-packs.sh"
-        BUNDLE_URL: "http://mirrors/files.liferay.com/private/ee/portal/7.0.10/liferay-dxp-digital-enterprise-tomcat-7.0-ga1-20160617092557801.zip"
+        BUNDLE_URL: "http://files.liferay.com/private/ee/portal/7.0.10/liferay-dxp-digital-enterprise-tomcat-7.0-ga1-20160617092557801.zip"
         JAVA_PACKAGE: "openjdk8"
-        LICENSE_URL: "http://mirrors/files.liferay.com/private/ee/liferay-up/License/7.0/license.xml"
-        PATCH_URLS: "http://mirrors/files.liferay.com/private/ee/fix-packs/7.0.10/de/liferay-fix-pack-de-44-7010.zip"
+        LICENSE_URL: "http://files.liferay.com/private/ee/liferay-up/License/7.0/license.xml"
+        PATCH_URLS: "http://files.liferay.com/private/ee/fix-packs/7.0.10/de/liferay-fix-pack-de-44-7010.zip"
       context: liferay/.
     container_name: liferay
     depends_on:

@@ -2,7 +2,7 @@
 
 env
 
-PATCH_FILES_DIR=/tmp/build-resources/patches
+PATCH_FILES_DIR=${BUILD_RESOURCES_DIR}/patches
 
 PATCH_FILES=`find $PATCH_FILES_DIR -type f`
 

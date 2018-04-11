@@ -12,7 +12,7 @@ ENV LIFERAY_HOME /opt/java/liferay
 
 RUN apk update \
   && apk upgrade \
-  && apk add --no-cache bash curl $JAVA_PACKAGE unzip zip
+  && apk add bash curl git $JAVA_PACKAGE unzip zip
 
 COPY ./build-resources/ ${BUILD_RESOURCES_DIR}/
 
@@ -26,6 +26,8 @@ RUN if [ -f "${BUILD_RESOURCES_DIR}/${LIFERAY_BUNDLE_NAME}" ] \
     && find /opt/java -depth -maxdepth 1 -type d -name "liferay-*" -exec mv {} /opt/java/liferay \; \
     && mkdir -p /opt/java/liferay/deploy \
     && find /opt/java/liferay -depth -maxdepth 1 -type d -name "tomcat-*" -exec mv {} /opt/java/liferay/tomcat \; \
+    && mkdir -p ${LIFERAY_HOME}/bin/startup \
+    && cp ${BUILD_RESOURCES_DIR}/license.xml ${LIFERAY_HOME}/bin/startup/license.xml \
   ; fi
 
 RUN chmod +x ${BUILD_RESOURCES_DIR}/scripts/*.sh \
