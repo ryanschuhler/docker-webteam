@@ -28,8 +28,11 @@ rm ${PATCHES_DEST}/*.zip
 
 downloadFile ${BUNDLE_URL} ${BUNDLE_DEST}
 downloadFile ${DATABASE_URL} ${DATABASE_DEST}
+
+[ -d ${LICENSE_DEST#*/} ] || mkdir ${LICENSE_DEST#*/}
 downloadFile ${LICENSE_URL} ${LICENSE_DEST}
 
+[ -d ${PATCHES_DEST} ] || mkdir ${PATCHES_DEST}
 for PATCH in $(echo ${PATCH_URLS} | sed "s/,/ /g")
 do
     downloadFile ${PATCH} ${PATCHES_DEST}/${PATCH##*/}

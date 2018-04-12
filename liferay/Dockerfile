@@ -12,7 +12,7 @@ ENV LIFERAY_HOME /opt/java/liferay
 
 RUN apk update \
   && apk upgrade \
-  && apk add bash curl git $JAVA_PACKAGE unzip zip
+  && apk add bash curl git $JAVA_PACKAGE openssh-client unzip zip
 
 COPY ./build-resources/ ${BUILD_RESOURCES_DIR}/
 

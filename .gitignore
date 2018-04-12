@@ -1,4 +1,5 @@
 .password
+.ssh
 .username
 liferay/build-resources/patches/*
 liferay/build-resources/bundle.zip
