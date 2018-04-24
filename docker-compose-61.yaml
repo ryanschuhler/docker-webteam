@@ -1,0 +1,86 @@
+version: '3.3'
+
+networks:
+  www-external:
+    internal: false
+  www-internal:
+    internal: true
+
+services:
+  61_elasticsearch:
+    container_name: 61_elasticsearch
+    environment:
+      - "cluster.name=elasticsearch"
+    image: ryanschuhler/elasticsearch:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - "61_elasticsearch:/usr/share/elasticsearch/data"
+  61_httpd:
+    container_name: 61_httpd
+    env_file:
+      - "httpd/httpd.env"
+      - "httpd/httpd-${ENV:-local}.env"
+    image: ryanschuhler/httpd:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "61_httpd:/var/www/html"
+      - "../httpd/resources/:/tmp/httpd"
+  61_liferay:
+    container_name: 61_liferay
+    depends_on:
+     - "61_mariadb"
+    environment:
+      - "VIRTUAL_PORT=8080"
+    image: ryanschuhler/liferay:web-prod
+    ports:
+      - "8000:8000"
+      - "11311:11311"
+      - "12345:12345"
+    user: liferay
+    networks:
+      - "www-external"
+      - "www-internal"
+    volumes:
+      - "61_liferay:/opt/java/liferay/data"
+      - "./liferay/resources/deploy:/opt/java/liferay/deploy"
+      - "~/repos/ee-6.2.x/deploy:/opt/java/liferay/deploy"
+  61_mariadb:
+    container_name: 61_mariadb
+    env_file:
+      - "mariadb/mariadb.env"
+    image: ryanschuhler/mariadb:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "3307:3306"
+    volumes:
+      - "61_mariadb:/var/lib/mysql"
+      - "./mariadb/resources/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/"
+  61_hubspot:
+    container_name: 61_hubspot
+    image: ryanschuhler/hubspot:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "8080:80"
+    volumes:
+      - "61_httpd:/home"
+
+volumes:
+  61_elasticsearch:
+  61_httpd:
+  61_hubspot:
+  61_liferay:
+  61_mariadb:

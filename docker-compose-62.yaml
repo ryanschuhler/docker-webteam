@@ -1,0 +1,88 @@
+version: '3.3'
+
+networks:
+  www-external:
+    internal: false
+  www-internal:
+    internal: true
+
+services:
+  62_elasticsearch:
+    container_name: 62_elasticsearch
+    environment:
+      - "cluster.name=elasticsearch"
+    image: ryanschuhler/elasticsearch:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - "62_elasticsearch:/usr/share/elasticsearch/data"
+  62_httpd:
+    container_name: 62_httpd
+    env_file:
+      - "httpd/httpd.env"
+      - "httpd/httpd-${ENV:-local}.env"
+    image: ryanschuhler/httpd:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "62_httpd:/var/www/html"
+      - "../httpd/resources/:/tmp/httpd"
+  62_liferay:
+    container_name: 62_liferay
+    depends_on:
+     - "62_mariadb"
+    environment:
+      - "VIRTUAL_PORT=8080"
+      - "DB_CONTAINER=62_mariadb"
+      - "SEARCH_CONTAINER=62_elasticsearch"
+    image: ryanschuhler/liferay:www-prod
+    ports:
+      - "8000:8000"
+      - "11311:11311"
+      - "12345:12345"
+    user: liferay
+    networks:
+      - "www-external"
+      - "www-internal"
+    volumes:
+      - "62_liferay:/opt/java/liferay/data"
+      - "./liferay/resources/deploy:/opt/java/liferay/deploy"
+      - "~/repos/ee-6.2.x/deploy:/opt/java/liferay/deploy"
+  62_mariadb:
+    container_name: 62_mariadb
+    env_file:
+      - "mariadb/mariadb.env"
+    image: ryanschuhler/mariadb:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "3307:3306"
+    volumes:
+      - "62_mariadb:/var/lib/mysql"
+      - "./mariadb/resources/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/"
+  62_hubspot:
+    container_name: 62_hubspot
+    image: ryanschuhler/hubspot:ism
+    networks:
+      - "www-external"
+      - "www-internal"
+    ports:
+      - "8080:80"
+    volumes:
+      - "62_httpd:/home"
+
+volumes:
+  62_elasticsearch:
+  62_httpd:
+  62_hubspot:
+  62_liferay:
+  62_mariadb:

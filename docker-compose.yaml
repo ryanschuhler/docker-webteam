@@ -8,12 +8,11 @@ networks:
 
 services:
   elasticsearch:
-    build: elasticsearch/.
     container_name: elasticsearch
     env_file:
       - "elasticsearch/elasticsearch.env"
       - "elasticsearch/elasticsearch-${ENV:-local}.env"
-    image: elasticsearch:www
+    image: ryanschuhler/elasticsearch:ism
     networks:
       - "www-external"
       - "www-internal"
@@ -23,12 +22,11 @@ services:
     volumes:
       - "elasticsearch:/usr/share/elasticsearch/data"
   httpd:
-    build: httpd/.
     container_name: httpd
     env_file:
       - "httpd/httpd.env"
       - "httpd/httpd-${ENV:-local}.env"
-    image: httpd:www
+    image: ryanschuhler/httpd:ism
     networks:
       - "www-external"
       - "www-internal"
@@ -38,14 +36,6 @@ services:
     volumes:
       - "httpd:/var/www/html"
   liferay:
-    build:
-      args:
-        BUILD_SCRIPTS: "bundle-exclude.sh,apply-fix-packs.sh"
-        BUNDLE_URL: "http://files.liferay.com/private/ee/portal/7.0.10/liferay-dxp-digital-enterprise-tomcat-7.0-ga1-20160617092557801.zip"
-        JAVA_PACKAGE: "openjdk8"
-        LICENSE_URL: "http://files.liferay.com/private/ee/liferay-up/License/7.0/license.xml"
-        PATCH_URLS: "http://files.liferay.com/private/ee/fix-packs/7.0.10/de/liferay-fix-pack-de-44-7010.zip"
-      context: liferay/.
     container_name: liferay
     depends_on:
       - "elasticsearch"
@@ -53,7 +43,7 @@ services:
     env_file:
       - "liferay/liferay.env"
       - "liferay/liferay-${ENV:-local}.env"
-    image: liferay:www
+    image: ryanschuhler/liferay:www-dxp
     networks:
       - "www-external"
       - "www-internal"
@@ -69,12 +59,11 @@ services:
       - "./liferay/resources/osgi/modules:/opt/java/liferay/osgi/modules"
       - "./liferay/resources/osgi/war:/opt/java/liferay/osgi/war"
   mariadb:
-    build: mariadb/.
     container_name: mariadb
     env_file:
       - "mariadb/mariadb.env"
       - "mariadb/mariadb-${ENV:-local}.env"
-    image: mariadb:www
+    image: ryanschuhler/mariadb:ism
     networks:
       - "www-external"
       - "www-internal"
